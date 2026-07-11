@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Illustration Studio Editor</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:
+    "Segoe UI",
+    sans-serif;
+
+    height:100vh;
+
+    display:flex;
+
+    flex-direction:column;
+
+    background:#e5e7eb;
+}
+
+/* ===== Header ===== */
+
+header{
+
+    height:60px;
+
+    background:#1f2937;
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:0 16px;
+
+}
+
+header button{
+
+    border:none;
+
+    padding:8px 14px;
+
+    border-radius:6px;
+
+    cursor:pointer;
+}
+
+#backBtn{
+
+    background:#374151;
+
+    color:white;
+
+}
+
+#saveBtn{
+
+    background:#3b82f6;
+
+    color:white;
+
+}
+
+#exportBtn{
+
+    background:#10b981;
+
+    color:white;
+
+}
+
+#projectTitle{
+
+    flex:1;
+
+    height:36px;
+
+    padding:0 10px;
+
+    border:none;
+
+    border-radius:6px;
+}
+
+#saveStatus{
+
+    font-size:13px;
+
+    color:#d1d5db;
+}
+
+/* ===== Main ===== */
+
+.main{
+
+    flex:1;
+
+    display:flex;
+
+    overflow:hidden;
+
+}
+
+/* ===== Sidebar ===== */
+
+.sidebar{
+
+    width:300px;
+
+    background:white;
+
+    border-right:
+    1px solid #d1d5db;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+/* ===== ToolBar ===== */
+
+.toolbar{
+
+    padding:10px;
+
+    border-bottom:
+    1px solid #d1d5db;
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:8px;
+
+}
+
+.toolbar button{
+
+    border:none;
+
+    background:#f3f4f6;
+
+    padding:8px 10px;
+
+    border-radius:6px;
+
+    cursor:pointer;
+
+}
+
+.toolbar button:hover{
+
+    background:#e5e7eb;
+
+}
+
+#brushSize{
+
+    width:100%;
+}
+
+/* ===== Layer Panel ===== */
+
+.layerPanel{
+
+    flex:1;
+
+    overflow:auto;
+
+    padding:10px;
+
+}
+
+#addLayerBtn{
+
+    width:100%;
+
+    margin-bottom:10px;
+
+    padding:10px;
+
+    border:none;
+
+    border-radius:6px;
+
+    background:#3b82f6;
+
+    color:white;
+
+    cursor:pointer;
+
+}
+
+/* ===== Canvas Area ===== */
+
+.canvasArea{
+
+    flex:1;
+
+    overflow:auto;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#9ca3af;
+
+}
+
+.canvasWrapper{
+
+    position:relative;
+
+    width:1200px;
+
+    height:700px;
+
+    background:white;
+
+    box-shadow:
+    0 0 15px rgba(
+        0,
+        0,
+        0,
+        .2
+    );
+
+}
+
+.layerCanvas{
+
+    position:absolute;
+
+    top:0;
+
+    left:0;
+}
+
+/* ===== Layer Item ===== */
+
+.layerItem{
+
+    background:white;
+
+    border:
+    1px solid #d1d5db;
+
+    border-radius:8px;
+
+    padding:8px;
+
+    margin-bottom:8px;
+
+}
+
+.layerItem.active{
+
+    border:
+    2px solid #3b82f6;
+}
+
+.layerHeader{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:8px;
+}
+
+.layerButtons{
+
+    display:flex;
+
+    gap:4px;
+}
+
+.layerButtons button{
+
+    border:none;
+
+    padding:4px 6px;
+
+    cursor:pointer;
+
+    border-radius:4px;
+}
+
+.opacitySlider{
+
+    width:100%;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<button id="backBtn">
+
+← ギャラリー
+
+</button>
+
+<input
+type="text"
+id="projectTitle"
+value="無題の作品">
+
+<button id="saveBtn">
+
+保存
+
+</button>
+
+<button id="exportBtn">
+
+PNG出力
+
+</button>
+
+<div id="saveStatus">
+
+未保存
+
+</div>
+
+</header>
+
+<div class="main">
+
+<div class="sidebar">
+
+<div class="toolbar">
+
+<input
+type="color"
+id="colorPicker"
+value="#000000">
+
+<input
+type="range"
+id="brushSize"
+min="1"
+max="100"
+value="5">
+
+<button id="penBtn">
+
+ペン
+
+</button>
+
+<button id="eraserBtn">
+
+消しゴム
+
+</button>
+
+<button id="undoBtn">
+
+Undo
+
+</button>
+
+<button id="redoBtn">
+
+Redo
+
+</button>
+
+</div>
+
+<div
+id="layerPanel"
+class="layerPanel">
+
+<button
+id="addLayerBtn">
+
+＋ レイヤー追加
+
+</button>
+
+</div>
+
+</div>
+
+<div class="canvasArea">
+
+<div
+id="canvasWrapper"
+class="canvasWrapper">
+
+</div>
+
+</div>
+
+</div>
+
+<script src="db.js"></script>
+
+<script src="js/layerManager.js"></script>
+
+<script src="js/historyManager.js"></script>
+
+<script src="js/editor.js"></script>
+
+</body>
+
+</html>
